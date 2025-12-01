@@ -2,6 +2,8 @@
 title: "Biomarker analysis using pROC package"
 ---
 
+This README documents the pipeline used for generation of ROC-AUC value using pROC package
+
 ```{r}
 #Load the required packages
 library(pROC)
@@ -25,3 +27,4 @@ roc_curve <- roc(labels, gene_expression)
 auc_value <- auc(roc_curve)
 print(paste("AUC:", auc_value))
 ```
+
