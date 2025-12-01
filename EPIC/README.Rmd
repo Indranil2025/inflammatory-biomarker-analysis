@@ -52,10 +52,3 @@ write.table(
   quote     = FALSE
 )
 ```
-
-
-
-
-
-
-
