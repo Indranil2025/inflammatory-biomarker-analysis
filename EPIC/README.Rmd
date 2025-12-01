@@ -2,6 +2,8 @@
 title: "Immune cell type deconvolution using EPIC"
 ---
 
+This README documents the pipeline used for immune cell type decovolution using EPIC package
+
 ```{r}
 # Install EPIC from GitHub if needed
 install.packages("devtools")
@@ -52,3 +54,4 @@ write.table(
   quote     = FALSE
 )
 ```
+
