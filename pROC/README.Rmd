@@ -25,7 +25,3 @@ roc_curve <- roc(labels, gene_expression)
 auc_value <- auc(roc_curve)
 print(paste("AUC:", auc_value))
 ```
-
-
-
-
