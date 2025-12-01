@@ -1,0 +1,31 @@
+---
+title: "Project README"
+output: github_document
+---
+
+```{r}
+#Load the required packages
+library(pROC)
+library(readxl)
+```
+
+```{r}
+# Read the count matrix
+data <- read_excel("expression_counts.xlsx")
+```
+
+```{r}
+# Extract gene expression and sample labels
+gene_expression <- data$Gene
+labels <- data$Condition
+```
+
+```{r}
+# Compute ROC and AUC
+roc_curve <- roc(labels, gene_expression)
+auc_value <- auc(roc_curve)
+print(paste("AUC:", auc_value))
+```
+
+
+
