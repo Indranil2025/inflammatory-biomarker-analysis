@@ -1,6 +1,5 @@
 ---
-title: "Project README"
-output: github_document
+title: "Immune cell type deconvolution using EPIC"
 ---
 
 ```{r}
@@ -53,6 +52,7 @@ write.table(
   quote     = FALSE
 )
 ```
+
 
 
 
