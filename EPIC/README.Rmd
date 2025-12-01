@@ -1,0 +1,61 @@
+---
+title: "Project README"
+output: github_document
+---
+
+```{r}
+# Install EPIC from GitHub if needed
+install.packages("devtools")
+devtools::install_github("GfellerLab/EPIC", build_vignettes = TRUE)
+```
+
+```{r}
+# Load required packages
+library(EPIC)     # cell-type deconvolution
+library(dplyr)    # data manipulation
+```
+
+```{r}
+# Path to normalized matrix for samples
+expr <- read.table(
+  "normalized_matrix.txt",
+  header      = TRUE,
+  sep         = "\t",
+  check.names = FALSE
+)
+```
+
+```{r}
+# Set the first column as row names
+rownames(expr) <- expr[, 1]
+# Remove the first column from the data frame
+expr <- expr[, -1]
+```
+
+```{r}
+# Convert to numeric matrix
+expr_matrix <- as.matrix(expr)
+# Run EPIC on the expression matrix
+epic_result <- EPIC(bulk = expr_matrix)
+```
+
+```{r}
+# Inspect estimated cell fractions
+head(epic_result$cellFractions)
+```
+
+```{r}
+# Save EPIC-estimated cell fractions to a tab-delimited file
+write.table(
+  epic_result$cellFractions,
+  file      = "EPIC_cell_fractions.txt",
+  sep       = "\t",
+  quote     = FALSE
+)
+```
+
+
+
+
+
+
