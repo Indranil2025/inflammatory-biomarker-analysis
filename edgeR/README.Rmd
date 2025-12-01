@@ -1,0 +1,115 @@
+---
+title: "Differential expression of genes using edgeR"
+---
+
+```{r}
+#Load required packages
+library(edgeR)
+library(limma)
+library(Glimma)
+library(org.Hs.eg.db)
+library(gplots)
+library(RColorBrewer)
+library(NMF)
+library(readxl)
+```
+
+```{r}
+#Import and visualize data
+seqdata <- read_excel("count_matrix.xlsx")
+sample  <- read_excel("sample_file.xlsx")
+head(seqdata)
+dim(seqdata)
+sample
+```
+
+```{r}
+#Process the count matrix
+countdata <- as.data.frame(seqdata[,-1])
+rownames(countdata) <- seqdata[[1]]
+head(countdata)
+colnames(countdata)
+table(colnames(countdata) == sample[[1]])
+```
+
+```{r}
+#Create DGElist object and assign group
+y <- DGEList(countdata)
+y
+group <- factor(sample[[2]])
+y$samples$group <- group
+y$samples
+```
+
+```{r}
+#Annotate genes
+ann <- select(org.Hs.eg.db,
+              keys <- rownames(y[[1]]),
+              columns = c("ENTREZID","SYMBOL","GENENAME"),
+              keytype = "ENSEMBL")
+
+matching_ids <- ann$ENSEMBL %in% rownames(y[[1]])
+ann <- ann[matching_ids, ]
+
+y[[2]] <- ann
+```
+
+```{r}
+#Filter lowly expressed genes
+myCPM <- cpm(countdata)
+thresh <- myCPM > 0.5
+keep <- rowSums(thresh) >= 2
+summary(keep)
+```
+
+```{r}
+#Multidimensional scaling plot
+plotMDS(y)
+sample$Status <- factor(sample[[2]])
+col.cell <- rep("black", nrow(sample))
+plotMDS(y, col = col.cell)
+```
+
+```{r}
+#Design matrix and voom trnasformation
+design <- model.matrix(~ 0 + group)
+design
+colnames(design) <- levels(group)
+design
+par(mfrow=c(1,1))
+v <- voom(y, design, plot = TRUE)
+v
+names(v)
+```
+
+```{r}
+#Make contrasts
+cont.matrix <- makeContrasts(
+  DiseasevsControl = Disease - Control,
+  levels = design
+)
+cont.matrix
+```
+
+```{r}
+#Fit contrasts and apply Empirical Bayes
+fit.cont <- contrasts.fit(fit, cont.matrix)
+fit.cont <- eBayes(fit.cont)
+
+dim(fit.cont)
+summary(decideTests(fit.cont))
+```
+
+```{r}
+#Export
+topTable(fit.cont, coef = 1, sort.by = "p")
+topTableData <- topTable(fit.cont, coef = 1, sort.by = "p", number = Inf)
+write.csv(
+  topTableData,
+  file = "deg.csv",
+  row.names = FALSE
+)
+```
+
+
+
