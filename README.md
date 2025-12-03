@@ -2,7 +2,7 @@ Inflammatory marker gene analysis among neuropsychiatric disorders
 
 This repository contains all code used for analysing inflammatory marker genes across different neuropsychiatric disorders. The workflow includes: Differential gene expression analysis; Diagnostic evaluation using ROC curves; Immune cell-type deconvolution
 
-Each analysis module has its own folder with standalone scripts.
+Each analysis module has its own folder with alongwith scripts.
 
 1. Differential expression analysis (edgeR)
 
